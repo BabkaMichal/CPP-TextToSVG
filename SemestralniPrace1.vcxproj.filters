@@ -18,6 +18,9 @@
 	<ClCompile Include="CLI.cpp">
 	  <Filter>Source Files</Filter>
 	</ClCompile>
+	<ClCompile Include="Canvas.cpp">
+	  <Filter>Source Files</Filter>
+	</ClCompile>
 	<ClCompile Include="Parser.cpp">
 	  <Filter>Source Files</Filter>
 	</ClCompile>
@@ -27,6 +30,9 @@
   </ItemGroup>
   <ItemGroup>
 	<ClInclude Include="CLI.h">
+	  <Filter>Header Files</Filter>
+	</ClInclude>
+	<ClInclude Include="Canvas.h">
 	  <Filter>Header Files</Filter>
 	</ClInclude>
 	<ClInclude Include="Parser.h">

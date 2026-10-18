@@ -1,16 +1,49 @@
 #include "Parser.h"
+#include "Canvas.h"
 
 #include <charconv>
 #include <cmath>
 #include <sstream>
 #include <utility>
 
+//construcots
 LineCommand::LineCommand(int x1, int y1, int x2, int y2) : x1_(x1), y1_(y1), x2_(x2), y2_(y2) {}
 CircleCommand::CircleCommand(int x, int y, int radius) : x_(x), y_(y), radius_(radius) {}
 RectangleCommand::RectangleCommand(int x, int y, int width, int height) : x_(x), y_(y), width_(width), height_(height) {}
 TranslateCommand::TranslateCommand(int x, int y) : x_(x), y_(y) {}
 RotateCommand::RotateCommand(int x, int y, double angle) : x_(x), y_(y), angle_(angle) {}
 ScaleCommand::ScaleCommand(int x, int y, double factor) : x_(x), y_(y), factor_(factor) {}
+
+//executes
+void LineCommand::execute(Canvas& canvas) const {
+	const Point start{static_cast<double>(x1_), static_cast<double>(y1_)};
+	const Point end{static_cast<double>(x2_), static_cast<double>(y2_)};
+	canvas.addShape(std::make_unique<LineShape>(start, end));
+}
+
+void CircleCommand::execute(Canvas& canvas) const {
+	const Point center{static_cast<double>(x_), static_cast<double>(y_)};
+	canvas.addShape(std::make_unique<CircleShape>(center, static_cast<double>(radius_)));
+}
+
+void RectangleCommand::execute(Canvas& canvas) const {
+	const Point topLeft{static_cast<double>(x_), static_cast<double>(y_)};
+	canvas.addShape(std::make_unique<RectangleShape>(topLeft, static_cast<double>(width_), static_cast<double>(height_)));
+}
+
+void TranslateCommand::execute(Canvas& canvas) const {
+	canvas.translate(static_cast<double>(x_), static_cast<double>(y_));
+}
+
+void RotateCommand::execute(Canvas& canvas) const {
+	const Point center{static_cast<double>(x_), static_cast<double>(y_)};
+	canvas.rotate(center, angle_);
+}
+
+void ScaleCommand::execute(Canvas& canvas) const {
+	const Point center{static_cast<double>(x_), static_cast<double>(y_)};
+	canvas.scale(center, factor_);
+}
 
 namespace {
 
