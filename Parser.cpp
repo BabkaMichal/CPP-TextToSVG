@@ -124,7 +124,7 @@ std::unique_ptr<Command> parseLineCommand(const std::vector<std::string>& tokens
 	int x1{}, y1{}, x2{}, y2{};
 
 	if (!hasTokenCount(tokens, 5) || !parseInteger(tokens[1], x1) || !parseInteger(tokens[2], y1) ||
-		!parseInteger(tokens[3], x2) || !parseInteger(tokens[4], y2) || x1 == x2 || y1 == y2) {
+		!parseInteger(tokens[3], x2) || !parseInteger(tokens[4], y2) || (x1 == x2 && y1 == y2)) {
 		return nullptr;
 	}
 

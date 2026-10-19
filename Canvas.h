@@ -7,6 +7,10 @@
 struct Point {
 	double x{};
 	double y{};
+
+	Point operator+(const Point& other) const;
+	Point operator-(const Point& other) const;
+	Point operator*(double factor) const;
 };
 
 class Shape {

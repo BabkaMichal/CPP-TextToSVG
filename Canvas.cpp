@@ -1,38 +1,49 @@
 #include "Canvas.h"
 
+#include <algorithm>
 #include <cmath>
 #include <utility>
-#define _USE_MATH_DEFINES
-#include <math.h>
 
 namespace {
 
 //move a point by the given amount
 void translatePoint(Point& point, double x, double y) {
-	point.x += x;
-	point.y += y;
+	point = point + Point{x, y};
 }
 
 //rotate a point around a center by an angle in degrees
 void rotatePoint(Point& point, const Point& center, double angle) {
-	constexpr double pi = M_PI;
+	constexpr double pi = 3.14159265358979323846;
 	const double radians = angle * pi / 180.0;
 	const double cosine = std::cos(radians);
 	const double sine = std::sin(radians);
-	const double offsetX = point.x - center.x;
-	const double offsetY = point.y - center.y;
+	const Point offset = point - center;
+	const Point rotatedOffset{
+		offset.x * cosine - offset.y * sine,
+		offset.x * sine + offset.y * cosine
+	};
 
-	point.x = center.x + offsetX * cosine - offsetY * sine;
-	point.y = center.y + offsetX * sine + offsetY * cosine;
+	point = center + rotatedOffset;
 }
 
 //scale a point relative to a center
 void scalePoint(Point& point, const Point& center, double factor) {
-	point.x = center.x + (point.x - center.x) * factor;
-	point.y = center.y + (point.y - center.y) * factor;
+	point = center + (point - center) * factor;
 }
 
 } // namespace
+
+Point Point::operator+(const Point& other) const {
+	return {x + other.x, y + other.y};
+}
+
+Point Point::operator-(const Point& other) const {
+	return {x - other.x, y - other.y};
+}
+
+Point Point::operator*(double factor) const {
+	return {x * factor, y * factor};
+}
 
 LineShape::LineShape(const Point& start, const Point& end) : start_(start), end_(end) {}
 
@@ -119,9 +130,9 @@ void Canvas::addShape(std::unique_ptr<Shape> shape) {
 }
 
 void Canvas::translate(double x, double y) {
-	for (const std::unique_ptr<Shape>& shape : shapes_) {
+	std::for_each(shapes_.begin(), shapes_.end(), [x, y](const std::unique_ptr<Shape>& shape) {
 		shape->translate(x, y);
-	}
+	});
 }
 
 void Canvas::rotate(const Point& center, double angle) {
